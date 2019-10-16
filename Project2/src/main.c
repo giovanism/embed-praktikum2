@@ -66,11 +66,11 @@ int main (void)
 	gpio_set_pin_high(LCD_BACKLIGHT_ENABLE_PIN);
 
 	// Set display - output lcd
-	gfx_mono_draw_string("Giovan Isa Musthofa",0, 0, &sysfont);
+	gfx_mono_draw_string("   Sensor Read    ",0, 0, &sysfont);
 	delay_ms(1000);
 	gfx_mono_draw_string("We will use sensor",0, 8, &sysfont);
 	delay_ms(1000);
-	gfx_mono_draw_string("    Sensor Read    ",0, 0, &sysfont);
+	gfx_mono_draw_string("Giovan Isa Musthofa",0, 0, &sysfont);
 	gfx_mono_draw_string("                   ",0, 8, &sysfont);
 	
 	// Set J4 Pin 0 to output
