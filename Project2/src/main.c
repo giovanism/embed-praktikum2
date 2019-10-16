@@ -90,7 +90,9 @@ int main (void)
 			window_pos = WINDOW_OPEN;
 		}
 		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_2) == 0) {
-			// TODO implementasi lampu sein
+			// Implementasi lampu sein
+			gpio_toggle_pin(LED1);
+			gpio_toggle_pin(LED2);
 		}
 
 		// Routine every loops
