@@ -36,6 +36,9 @@
 #define WINDOW_OPEN 150
 #define WINDOW_SHUT 1
 
+static const char ON_STR[] = "On";
+static const char OFF_STR[] = "Off";
+
 static char strbuf[128];
 
 int main (void)
@@ -70,6 +73,7 @@ int main (void)
 	gfx_mono_draw_string("    Sensor Read    ",0, 0, &sysfont);
 	gfx_mono_draw_string("                   ",0, 8, &sysfont);
 
+	char* status = OFF_STR;
 	int window_pos;
 	int	speed;
 
@@ -97,12 +101,18 @@ int main (void)
 			// Implementasi lampu sein
 			gpio_toggle_pin(LED1);
 			gpio_toggle_pin(LED2);
+
+			if (status == OFF_STR) {
+				status = ON_STR;
+			} else {
+				status = OFF_STR;
+			}
 		}
 
 		// Routine every loops
 		hold_window(window_pos);
 
-		snprintf(strbuf, sizeof(strbuf), "Status : %s", "Mati");
+		snprintf(strbuf, sizeof(strbuf), "Status : %3s", status);
 		gfx_mono_draw_string(strbuf, 0, 16, &sysfont);
 		snprintf(strbuf, sizeof(strbuf), "Speed : %4d", speed);
 		gfx_mono_draw_string(strbuf, 0, 24, &sysfont);
