@@ -260,7 +260,7 @@ int16_t lightsensor_get_raw_value(void)
  *
  * \retval the raw ADC value from the current potensiometer
  */
-static uint16_t potensiometer_read(){
+uint16_t potensiometer_read(void) {
 	uint16_t result;
 	adc_enable(&ADCA);
 	adc_start_conversion(&ADCA, ADC_CH2);
@@ -268,3 +268,4 @@ static uint16_t potensiometer_read(){
 	result = adc_get_result(&ADCA, ADC_CH2);
 	return result;
 }
+

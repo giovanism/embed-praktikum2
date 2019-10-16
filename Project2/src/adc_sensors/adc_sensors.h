@@ -70,4 +70,6 @@ int16_t lightsensor_get_raw_value(void);
 bool ntc_data_is_ready(void);
 bool lightsensor_data_is_ready(void);
 
+uint16_t potensiometer_read(void);
+	
 #endif /* ADC_SENSORS_H_INCLUDED */

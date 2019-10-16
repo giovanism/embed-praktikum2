@@ -70,6 +70,7 @@ int main (void)
 	gfx_mono_draw_string("                   ",0, 8, &sysfont);
 
 	int window_pos;
+	int	speed;
 
 	for(;;)
 	{
@@ -81,6 +82,7 @@ int main (void)
 		gfx_mono_draw_string(strbuf, 0, 8, &sysfont);
 
 		window_pos = WINDOW_SHUT;
+		speed = potensiometer_read();
 
 		// Check if button pressed
 		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0) == 0) {
@@ -101,6 +103,8 @@ int main (void)
 
 		snprintf(strbuf, sizeof(strbuf), "Status : %s", "Mati");
 		gfx_mono_draw_string(strbuf, 0, 16, &sysfont);
+		snprintf(strbuf, sizeof(strbuf), "Speed : %d", speed);
+		gfx_mono_draw_string(strbuf, 0, 24, &sysfont);
 	}
 }
 
