@@ -31,8 +31,9 @@
 #include <asf.h>
 #include <stdio.h>
 #include "adc_sensors/adc_sensors.h"
+#include "main.h"
 
-#define WINDOW_OPEN 375
+#define WINDOW_OPEN 150
 #define WINDOW_SHUT 1
 
 static char strbuf[128];
@@ -98,7 +99,7 @@ int main (void)
 		// Routine every loops
 		hold_window(window_pos);
 
-		snprintf(strbuf, sizeof(strbuf), "Status : Mati", );
+		snprintf(strbuf, sizeof(strbuf), "Status : %s", "Mati");
 		gfx_mono_draw_string(strbuf, 0, 8, &sysfont);
 	}
 }
