@@ -265,6 +265,6 @@ static uint16_t potensiometer_read(){
 	adc_enable(&ADCA);
 	adc_start_conversion(&ADCA, ADC_CH2);
 	adc_wait_for_interrupt_flag(&ADCA, ADC_CH2);
-	result = adc_get_result(&ADCA, MY_ADC_CH);
+	result = adc_get_result(&ADCA, ADC_CH2);
 	return result;
 }
