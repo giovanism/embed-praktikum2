@@ -72,10 +72,14 @@ int main (void)
 	delay_ms(1000);
 	gfx_mono_draw_string("    Sensor Read    ",0, 0, &sysfont);
 	gfx_mono_draw_string("                   ",0, 8, &sysfont);
+	
+	// Set J4 Pin 0 to output
+	ioport_set_pin_dir(J4_PIN0, IOPORT_DIR_OUTPUT);
 
 	char* status = OFF_STR;
 	int window_pos;
 	int	speed;
+	int sound;
 
 	for(;;)
 	{
@@ -88,10 +92,12 @@ int main (void)
 
 		window_pos = WINDOW_SHUT;
 		speed = potensiometer_get_value();
+		sound = 0;
 
 		// Check if button pressed
 		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0) == 0) {
-			// TODO implementasi klakson
+			// Implementasi klakson
+			sound = 1;
 		}
 		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_1) == 0) {
 			// Implementasi jendela mobil
@@ -109,8 +115,11 @@ int main (void)
 			}
 		}
 
-		// Routine every loops
+		// Move window to position
 		hold_window(window_pos);
+		// Set klaxon pin level
+		ioport_set_pin_level(J4_PIN0, sound);
+		//gpio_set_pin_high(J4_PIN0);
 
 		snprintf(strbuf, sizeof(strbuf), "Status : %3s", status);
 		gfx_mono_draw_string(strbuf, 0, 16, &sysfont);
