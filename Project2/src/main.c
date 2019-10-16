@@ -100,7 +100,7 @@ int main (void)
 		hold_window(window_pos);
 
 		snprintf(strbuf, sizeof(strbuf), "Status : %s", "Mati");
-		gfx_mono_draw_string(strbuf, 0, 8, &sysfont);
+		gfx_mono_draw_string(strbuf, 0, 16, &sysfont);
 	}
 }
 
