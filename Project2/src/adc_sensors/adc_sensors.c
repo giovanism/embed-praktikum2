@@ -190,6 +190,11 @@ void adc_sensors_init(void)
 	 */
 	adcch_set_input(&adc_ch_conf, ADCCH_POS_PIN1, ADCCH_NEG_NONE, 1);
 	adcch_write_configuration(&ADCA, ADC_CH1, &adc_ch_conf);
+	
+	/* Configure J2_PIN0 (potensiometer)
+	 */
+	adcch_set_input(&adcch_conf, J2_PIN0, ADCCH_NEG_NONE, 1);
+	adcch_write_configuration(&ADCA, ADC_CH2, &adc_ch_conf);
 
 	adc_enable(&ADCA);
 }
