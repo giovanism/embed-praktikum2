@@ -50,6 +50,7 @@ int main (void)
 	// Init lcd
 	gfx_mono_init();
 	adc_sensors_init();
+	potensiometer_init();
 
 	// Inisialisasi interrupt vector
 	pmic_init();
@@ -82,7 +83,7 @@ int main (void)
 		gfx_mono_draw_string(strbuf, 0, 8, &sysfont);
 
 		window_pos = WINDOW_SHUT;
-		speed = potensiometer_read();
+		speed = potensiometer_get_value();
 
 		// Check if button pressed
 		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0) == 0) {
@@ -103,7 +104,7 @@ int main (void)
 
 		snprintf(strbuf, sizeof(strbuf), "Status : %s", "Mati");
 		gfx_mono_draw_string(strbuf, 0, 16, &sysfont);
-		snprintf(strbuf, sizeof(strbuf), "Speed : %d", speed);
+		snprintf(strbuf, sizeof(strbuf), "Speed : %4d", speed);
 		gfx_mono_draw_string(strbuf, 0, 24, &sysfont);
 	}
 }
@@ -124,6 +125,41 @@ void PWM_Init(void)
 	// Set Compare Register value
 	TCC0.CCA = 375;
 }
+
+void potensiometer_init(void) {
+	struct adc_config adc_conf;
+	struct adc_channel_config adcch_conf;
+
+	adc_read_configuration(&ADCA, &adc_conf);
+	adcch_read_configuration(&ADCA, ADC_CH2, &adcch_conf);
+
+	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_12,ADC_REF_VCC);
+	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
+	adc_set_clock_rate(&adc_conf, 125000UL);
+
+	adcch_set_input(&adcch_conf, J2_PIN0, ADCCH_NEG_NONE, 1);
+
+	adc_write_configuration(&ADCA, &adc_conf);
+	adcch_write_configuration(&ADCA, ADC_CH2, &adcch_conf);
+}
+
+/**
+ * \brief Read the potensiometer value from the ADC
+ *
+ * This will read the ADC value of the channel and pin connected to the
+ * potensiometer on the A3BU-Xplained.
+ *
+ * \retval the raw ADC value from the current potensiometer
+ */
+int16_t potensiometer_get_value(void) {
+	uint16_t result;
+	adc_enable(&ADCA);
+	adc_start_conversion(&ADCA, ADC_CH2);
+	adc_wait_for_interrupt_flag(&ADCA, ADC_CH2);
+	result = adc_get_result(&ADCA, ADC_CH2);
+	return result;
+}
+
 
 static void hold_window(int compare){
 	TCC0.CCA = compare;

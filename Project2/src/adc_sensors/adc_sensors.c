@@ -192,11 +192,6 @@ void adc_sensors_init(void)
 	adcch_set_input(&adc_ch_conf, ADCCH_POS_PIN1, ADCCH_NEG_NONE, 1);
 	adcch_write_configuration(&ADCA, ADC_CH1, &adc_ch_conf);
 
-	/* Configure J2_PIN0 (potensiometer)
-	 */
-	adcch_set_input(&adc_ch_conf, J2_PIN0, ADCCH_NEG_NONE, 1);
-	adcch_write_configuration(&ADCA, ADC_CH2, &adc_ch_conf);
-
 	adc_enable(&ADCA);
 }
 
@@ -249,23 +244,5 @@ int8_t ntc_get_temperature(void)
 int16_t lightsensor_get_raw_value(void)
 {
 	return light_sensor_sample;
-}
-
-
-/**
- * \brief Read the potensiometer value from the ADC
- *
- * This will read the ADC value of the channel and pin connected to the
- * potensiometer on the A3BU-Xplained.
- *
- * \retval the raw ADC value from the current potensiometer
- */
-uint16_t potensiometer_read(void) {
-	uint16_t result;
-	adc_enable(&ADCA);
-	adc_start_conversion(&ADCA, ADC_CH2);
-	adc_wait_for_interrupt_flag(&ADCA, ADC_CH2);
-	result = adc_get_result(&ADCA, ADC_CH2);
-	return result;
 }
 

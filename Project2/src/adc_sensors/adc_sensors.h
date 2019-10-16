@@ -62,6 +62,11 @@ static inline void lightsensor_measure(void)
 	adc_start_conversion(&ADCA, ADC_CH0);
 }
 
+static inline void ptn_measure(void)
+{
+	adc_start_conversion(&ADCA, ADC_CH2);
+}
+
 void adc_handler(ADC_t *adc, uint8_t channel, adc_result_t result);
 void adc_sensors_init(void);
 int16_t ntc_get_raw_value(void);
@@ -69,7 +74,5 @@ int8_t ntc_get_temperature(void);
 int16_t lightsensor_get_raw_value(void);
 bool ntc_data_is_ready(void);
 bool lightsensor_data_is_ready(void);
-
-uint16_t potensiometer_read(void);
 	
 #endif /* ADC_SENSORS_H_INCLUDED */
