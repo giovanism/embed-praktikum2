@@ -40,6 +40,7 @@ static const char ON_STR[] = "On";
 static const char OFF_STR[] = "Off";
 
 static char strbuf[128];
+static char* turn_sign = OFF_STR;
 
 int main (void)
 {
@@ -75,8 +76,10 @@ int main (void)
 	
 	// Set J4 Pin 0 to output
 	ioport_set_pin_dir(J4_PIN0, IOPORT_DIR_OUTPUT);
+	
+	// Set up timer interrupt
+	setup_timer0();
 
-	char* status = OFF_STR;
 	int window_pos;
 	int	speed;
 	int sound;
@@ -104,14 +107,11 @@ int main (void)
 			window_pos = WINDOW_OPEN;
 		}
 		if (ioport_get_pin_level(GPIO_PUSH_BUTTON_2) == 0) {
-			// Implementasi lampu sein
-			gpio_toggle_pin(LED1);
-			gpio_toggle_pin(LED2);
-
-			if (status == OFF_STR) {
-				status = ON_STR;
+			// Switch on or off turn sign
+			if (turn_sign == OFF_STR) {
+				turn_sign = ON_STR;
 			} else {
-				status = OFF_STR;
+				turn_sign = OFF_STR;	
 			}
 		}
 
@@ -120,8 +120,8 @@ int main (void)
 		// Set klaxon pin level
 		ioport_set_pin_level(J4_PIN0, sound);
 		//gpio_set_pin_high(J4_PIN0);
-
-		snprintf(strbuf, sizeof(strbuf), "Status : %3s", status);
+		
+		snprintf(strbuf, sizeof(strbuf), "Status : %3s", turn_sign);
 		gfx_mono_draw_string(strbuf, 0, 16, &sysfont);
 		snprintf(strbuf, sizeof(strbuf), "Speed : %4d", speed);
 		gfx_mono_draw_string(strbuf, 0, 24, &sysfont);
@@ -182,4 +182,30 @@ int16_t potensiometer_get_value(void) {
 
 static void hold_window(int compare){
 	TCC0.CCA = compare;
+}
+
+void setup_timer0(void){
+	
+	tc_enable(&TCD0);
+	tc_set_overflow_interrupt_callback(&TCD0, handler_blink);
+	tc_set_wgm(&TCD0, TC_WG_NORMAL);
+	tc_write_period(&TCD0, 4000);
+	tc_set_overflow_interrupt_level(&TCD0, TC_INT_LVL_LO);
+	tc_write_clock_source(&TCD0, TC_CLKSEL_DIV1024_gc);
+	
+	cpu_irq_enable();
+}
+
+void handler_blink(void) {
+	if (turn_sign == ON_STR) {
+		blink();
+	} else {
+		ioport_set_pin_level(LED1_GPIO, 1);
+		ioport_set_pin_level(LED1_GPIO, 1);
+	}
+}
+
+void blink(void) {
+	gpio_toggle_pin(LED1);
+	gpio_toggle_pin(LED2);
 }
